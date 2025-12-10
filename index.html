@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIG-BSF | En Línea</title>
+<style>
+  /* --- ESTILOS VISUALES --- */
+  body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: #eef2f5; margin: 0; padding: 0; }
+  .header { background: linear-gradient(135deg, #003300 0%, #004d00 100%); color: white; padding: 15px; text-align: center; border-bottom: 4px solid #F3C300; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+  .header h1 { margin: 0; font-size: 16px; letter-spacing: 1px; }
+  
+  .container { padding: 15px; max-width: 600px; margin: 0 auto; padding-bottom: 50px; }
+  .hidden { display: none !important; }
+  
+  /* Botones Navegación */
+  .btn-back { background: #343a40; color: white; border: none; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; font-weight: bold; }
+  .section-title { color: #003300; border-left: 5px solid #F3C300; padding-left: 12px; margin-bottom: 15px; font-size: 18px; font-weight: 700; }
+
+  /* Menú Principal */
+  .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .bank-btn { background: white; border: none; padding: 25px 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); cursor: pointer; text-align: center; display: flex; flex-direction: column; align-items: center; border: 1px solid #ddd; }
+  .bank-icon { font-size: 28px; margin-bottom: 10px; }
+  .bank-name { font-weight: 700; color: #333; font-size: 13px; text-transform: uppercase; }
+
+  /* Lista Agencias */
+  .agency-list { display: flex; flex-direction: column; gap: 10px; }
+  .agency-btn { background: white; padding: 18px; border-radius: 10px; border-left: 6px solid #003300; cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+  
+  /* Tarjeta Detalle */
+  .detail-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+  .detail-header { background: #003300; color: white; padding: 20px; }
+  .detail-body { padding: 20px; }
+  
+  /* Lista de Policías */
+  .officer-card { background: #f8f9fa; border: 1px solid #e9ecef; border-left: 4px solid #0056b3; border-radius: 6px; padding: 12px; margin-bottom: 15px; position: relative; }
+  .officer-name { font-weight: 700; color: #333; font-size: 14px; display: block; margin-bottom: 4px; padding-right: 80px; }
+  .officer-info { font-size: 12px; color: #666; display: block; margin-bottom: 2px; }
+  
+  /* Botón Llamar Pequeño */
+  .btn-call-mini { position: absolute; right: 10px; top: 10px; background: #28a745; color: white; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: bold; display: flex; align-items: center; gap: 5px; }
+
+  /* Botón Mapa Grande */
+  .actions { margin-top: 25px; padding-top: 15px; border-top: 1px solid #eee; }
+  .btn-map { background-color: #dc3545; width: 100%; display: block; padding: 14px; text-align: center; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; }
+
+  /* Mensajes */
+  #loader { text-align: center; padding: 50px 20px; color: #666; }
+  .error-box { background: #fff3cd; color: #856404; padding: 20px; border: 1px solid #ffeeba; border-radius: 8px; text-align: left; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>SIG-BSF EN LÍNEA</h1>
+  <p>Sistema de Control y Geogestión</p>
+</div>
+
+<div class="container">
+  
+  <div id="loader">🔄 Sincronizando con Hoja de Cálculo...</div>
+
+  <div id="error-screen" class="hidden">
+    <div class="error-box">
+      <strong>⚠️ ERROR DE CONEXIÓN</strong><br><br>
+      No se pudo descargar la lista de personal.<br><br>
+      <strong>Causa probable:</strong> Está abriendo el archivo localmente en su PC y el navegador bloqueó la conexión.<br><br>
+      <strong>Solución:</strong> Suba este archivo a un servidor web (Tiiny Host o GitHub) para que funcione.
+    </div>
+  </div>
+
+  <div id="view-home" class="hidden">
+    <h2 class="section-title">Entidades Financieras</h2>
+    <div class="bank-grid" id="bank-grid-content"></div>
+  </div>
+
+  <div id="view-agencies" class="hidden">
+    <button class="btn-back" onclick="goHome()">⬅ Volver</button>
+    <h2 class="section-title" id="agency-title">Agencias</h2>
+    <div class="agency-list" id="agency-list-content"></div>
+  </div>
+
+  <div id="view-detail" class="hidden">
+    <button class="btn-back" onclick="goBackToAgencies()">⬅ Volver</button>
+    <div class="detail-card">
+      <div class="detail-header">
+        <h2 id="d-bank" style="margin:0; font-size:18px;">BANCO</h2>
+        <small id="d-agency" style="opacity:0.8; font-size: 14px;">Nombre Agencia</small>
+        <div id="d-addr" style="font-size: 12px; margin-top: 5px; opacity: 0.9;">Dirección...</div>
+      </div>
+      <div class="detail-body">
+        <h3 style="margin-top:0; margin-bottom: 15px; font-size:13px; color:#666; text-transform:uppercase;">Personal Asignado:</h3>
+        <div id="officers-list"></div> <div class="actions">
+            <a id="btn-map" href="#" class="btn-map" target="_blank">🗺️ VER UBICACIÓN GPS</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // --- ENLACE REAL DE LA HOJA DE CALCULO ---
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSOk3SgSsOLT72VyjISH0aaKjbQojegDPsyOjR2b8VjvsiFpHqvLKcyn5XisYV46Rf4tUx--RsMlyMo/pub?output=csv'; 
+  const COLUMNAS = ['ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'RIESGO', 'UBICACION_GPS'];
+  
+  let fullData = [];
+  let currentBank = '';
+
+  // INICIO: Descarga datos de Google. Si falla, muestra error. NO HAY DATOS FALSOS.
+  window.onload = function() {
+    fetch(SHEET_URL)
+      .then(r => {
+          if(!r.ok) throw new Error("Error HTTP");
+          return r.text();
+      })
+      .then(t => {
+          fullData = csvAJSON(t);
+          if(fullData.length === 0) throw new Error("Hoja vacía");
+          initSystem();
+      })
+      .catch(e => {
+          document.getElementById('loader').classList.add('hidden');
+          document.getElementById('error-screen').classList.remove('hidden');
+      });
+  };
+
+  function initSystem() {
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('view-home').classList.remove('hidden');
+    renderBanks();
+  }
+
+  function renderBanks() {
+    // Detecta bancos únicos desde la hoja
+    const banks = [...new Set(fullData.map(i => i.ENTIDAD).filter(e => e && e.trim()))];
+    const grid = document.getElementById('bank-grid-content');
+    grid.innerHTML = '';
+    banks.forEach(bank => {
+      grid.innerHTML += `<button class="bank-btn" onclick="goToAgencies('${bank}')"><div class="bank-icon">🏦</div><div class="bank-name">${bank}</div></button>`;
+    });
+  }
+
+  function goToAgencies(bank) {
+    currentBank = bank;
+    document.getElementById('view-home').classList.add('hidden');
+    document.getElementById('view-agencies').classList.remove('hidden');
+    document.getElementById('agency-title').innerText = bank;
+    
+    // Filtrar datos del banco seleccionado
+    const bankData = fullData.filter(i => i.ENTIDAD === bank);
+    
+    // Agrupar por nombre de Agencia (Para no repetir botones)
+    const uniqueAgencies = new Map();
+    bankData.forEach(item => {
+        if(!uniqueAgencies.has(item.AGENCIA)) uniqueAgencies.set(item.AGENCIA, item);
+    });
+
+    const list = document.getElementById('agency-list-content');
+    list.innerHTML = '';
+
+    uniqueAgencies.forEach((item, key) => {
+      // Usamos el nombre de la agencia como identificador
+      list.innerHTML += `
+        <div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')">
+          <div><strong>${item.AGENCIA}</strong><span style="font-size:11px; color:#666;">${item.DIRECCION.substring(0, 35)}...</span></div>
+          <div>➤</div>
+        </div>`;
+    });
+  }
+
+  function goToDetail(agencyName) {
+    // Buscar TODOS los registros que coincidan con la Agencia seleccionada
+    const officers = fullData.filter(i => i.ENTIDAD === currentBank && i.AGENCIA === agencyName);
+    const info = officers[0]; // Tomamos datos generales del primero (Dirección, GPS)
+
+    document.getElementById('view-agencies').classList.add('hidden');
+    document.getElementById('view-detail').classList.remove('hidden');
+
+    document.getElementById('d-bank').innerText = info.ENTIDAD;
+    document.getElementById('d-agency').innerText = info.AGENCIA;
+    document.getElementById('d-addr').innerText = info.DIRECCION;
+
+    // Generar lista de funcionarios (Bucle)
+    const container = document.getElementById('officers-list');
+    container.innerHTML = '';
+
+    officers.forEach(off => {
+        container.innerHTML += `
+        <div class="officer-card">
+            <span class="officer-name">👮 ${off.FUNCIONARIO}</span>
+            <span class="officer-info">⏰ ${off.HORARIO} | ⚠️ ${off.RIESGO}</span>
+            <span class="officer-info">📱 ${off.CELULAR}</span>
+            <a href="tel:${off.CELULAR}" class="btn-call-mini">📞 Llamar</a>
+        </div>`;
+    });
+    
+    // Configurar Mapa (Enlace Oficial Universal)
+    if (info.UBICACION_GPS) {
+        // Usamos formato universal de Google Maps api=1
+        document.getElementById('btn-map').href = 'https://www.google.com/maps/search/?api=1&query=' + info.UBICACION_GPS;
+        document.getElementById('btn-map').style.display = 'block';
+    } else {
+        document.getElementById('btn-map').style.display = 'none';
+    }
+  }
+
+  function goHome() {
+    document.getElementById('view-agencies').classList.add('hidden');
+    document.getElementById('view-home').classList.remove('hidden');
+  }
+
+  function goBackToAgencies() {
+    document.getElementById('view-detail').classList.add('hidden');
+    document.getElementById('view-agencies').classList.remove('hidden');
+  }
+
+  // Parseador CSV robusto
+  function csvAJSON(csv){
+    const lineas = csv.split('\n');
+    const res = [];
+    const headers = lineas[0].split(',').map(h => h.trim().replace(/\r/g, ''));
+    for(let i=1; i<lineas.length; i++){
+        const obj = {};
+        const row = lineas[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        if(row.length > 1) {
+            COLUMNAS.forEach((col) => {
+                const idx = headers.indexOf(col);
+                obj[col] = (idx > -1 && row[idx]) ? row[idx].replace(/"/g,'').replace(/\r/g,'').trim() : '';
+            });
+            res.push(obj);
+        }
+    }
+    return res;
+  }
+</script>
+</body>
+</html>
