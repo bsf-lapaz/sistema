@@ -1,69 +1,172 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIG-BSF | Sistema Oficial</title>
+<title>SIG-BSF | Táctico</title>
 <style>
-  /* --- ESTILOS VISUALES PREMIUM --- */
-  :root { --verde: #00381e; --oro: #F3C300; }
-  body { font-family: 'Segoe UI', Roboto, sans-serif; background-color: #eef2f5; margin: 0; padding: 0; }
+  /* --- ESTILOS TÁCTICOS MODERNOS --- */
+  :root {
+    --verde-comando: #0a2e18;
+    --verde-brillante: #00ff55;
+    --oro: #FFD700;
+    --negro-transparente: rgba(0, 20, 0, 0.85);
+    --vidrio: rgba(255, 255, 255, 0.95);
+  }
+  
+  body { 
+    font-family: 'Segoe UI', Roboto, sans-serif; 
+    margin: 0; padding: 0; user-select: none;
+    /* FONDO DE OPERACIONES (Imagen Táctica de fondo) */
+    background: url('https://img.freepik.com/free-photo/police-car-lights-night-city-street_146671-19614.jpg?t=st=1710000000~exp=1710003600~hmac=abcdef') no-repeat center center fixed; 
+    background-size: cover;
+    background-color: #05110a; /* Color de respaldo */
+    color: #333;
+  }
+  
+  /* Capa oscura sobre la imagen para que se lea el texto */
+  body::before {
+    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,30,10,0.9), rgba(0,10,0,0.95));
+    z-index: -1;
+  }
+
   .hidden { display: none !important; }
 
-  /* LOGIN */
-  #view-login { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #002200, #004d00); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-  .login-card { background: rgba(255,255,255,0.1); padding: 40px; border-radius: 20px; backdrop-filter: blur(10px); width: 85%; max-width: 320px; border: 1px solid rgba(255,255,255,0.2); }
-  .login-btn { width: 100%; padding: 15px; background: var(--oro); color: var(--verde); border: none; border-radius: 8px; font-weight: 900; cursor: pointer; margin-top: 20px; }
-  .login-input { width: 100%; padding: 15px; border-radius: 8px; border: none; text-align: center; font-weight: bold; box-sizing: border-box; }
+  /* --- ANIMACIONES --- */
+  @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(243, 195, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(243, 195, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(243, 195, 0, 0); } }
 
-  /* CABECERA CON IMAGENES */
-  .header { 
-    background: linear-gradient(to bottom, #00381e, #001a00); 
-    color: white; padding: 10px 15px; 
-    border-bottom: 4px solid var(--oro); 
-    display: flex; align-items: center; justify-content: space-between; 
-    position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  /* PANTALLA LOGIN */
+  #view-login { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    backdrop-filter: blur(8px);
   }
-  /* Estilo para que las imagenes se vean bien */
-  .header-logo { height: 55px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
-  .header-text { text-align: center; flex-grow: 1; }
-  .header h1 { margin: 0; font-size: 14px; font-weight: 900; }
-  .header p { margin: 0; font-size: 10px; color: var(--oro); }
+  .login-card { 
+    background: rgba(0, 40, 20, 0.8); 
+    padding: 40px; border-radius: 20px; 
+    width: 80%; max-width: 320px; 
+    border: 1px solid rgba(0, 255, 85, 0.3); 
+    box-shadow: 0 0 30px rgba(0, 255, 85, 0.1);
+    text-align: center;
+    animation: slideIn 0.5s ease-out;
+  }
+  .login-input { 
+    width: 100%; padding: 15px; margin: 20px 0; border: none; border-radius: 30px; 
+    text-align: center; font-weight: bold; font-size: 16px; outline: none;
+    background: rgba(255,255,255,0.9); box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .login-btn { 
+    width: 100%; padding: 15px; background: var(--oro); color: var(--verde-comando); 
+    border: none; border-radius: 30px; font-weight: 900; font-size: 16px; cursor: pointer; 
+    text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
+  }
+  .login-btn:active { transform: scale(0.95); }
 
-  .container { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
-  
-  /* Botones y Listas */
-  .btn-back { background: #2c3e50; color: white; padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-  .section-title { color: var(--verde); border-left: 5px solid var(--oro); padding-left: 15px; margin-bottom: 20px; font-size: 18px; font-weight: 800; }
+  /* CABECERA FLOTANTE */
+  .header { 
+    background: rgba(0, 56, 30, 0.95); 
+    backdrop-filter: blur(10px);
+    color: white; padding: 10px 15px; 
+    border-bottom: 3px solid var(--oro); 
+    display: flex; align-items: center; justify-content: space-between; 
+    position: sticky; top: 0; z-index: 100; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  }
+  .header-logo { height: 50px; width: auto; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+  .header-text { text-align: center; flex-grow: 1; }
+  .header h1 { margin: 0; font-size: 15px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px black; }
+  .header p { margin: 0; font-size: 10px; color: var(--oro); font-weight: bold; }
+
+  .container { padding: 20px 15px; max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
+
+  /* BOTONES Y TARJETAS (Efecto Vidrio) */
+  .btn-back { 
+    background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 20px; border-radius: 30px; margin-bottom: 20px; cursor: pointer; 
+    display: inline-flex; align-items: center; font-weight: bold; font-size: 13px; 
+    backdrop-filter: blur(5px); transition: background 0.3s;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.2); }
+
+  .section-title { 
+    color: var(--oro); border-left: 5px solid var(--oro); padding-left: 15px; 
+    margin-bottom: 25px; font-size: 20px; font-weight: 800; text-transform: uppercase; 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
 
   .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-  .bank-btn { background: white; border: none; padding: 25px 10px; border-radius: 15px; box-shadow: 0 5px 10px rgba(0,0,0,0.05); cursor: pointer; display: flex; flex-direction: column; align-items: center; }
-  .bank-icon { font-size: 30px; margin-bottom: 10px; }
+  .bank-btn { 
+    background: var(--vidrio); border: none; padding: 25px 10px; border-radius: 15px; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2); cursor: pointer; 
+    display: flex; flex-direction: column; align-items: center; 
+    border-bottom: 4px solid transparent; 
+    animation: slideIn 0.4s ease-out; /* Animación de entrada */
+  }
+  .bank-btn:active { transform: scale(0.96); border-bottom: 4px solid var(--oro); }
+  .bank-icon { font-size: 35px; margin-bottom: 10px; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.2)); }
+  .bank-name { font-weight: 900; color: var(--verde-comando); font-size: 12px; text-transform: uppercase; }
+
+  .agency-list { display: flex; flex-direction: column; gap: 12px; }
+  .agency-btn { 
+    background: var(--vidrio); padding: 20px; border-radius: 12px; 
+    border-left: 6px solid var(--verde-comando); cursor: pointer; 
+    display: flex; justify-content: space-between; align-items: center; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1); animation: slideIn 0.3s ease-out;
+  }
+
+  /* DETALLE OPERATIVO */
+  .detail-card { 
+    background: var(--vidrio); border-radius: 16px; overflow: hidden; 
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;
+  }
+  .detail-header { 
+    background: linear-gradient(135deg, var(--verde-comando), #001a00); 
+    color: white; padding: 25px; position: relative;
+  }
+  /* Icono de fondo decorativo */
+  .detail-header::after {
+    content: "🛡️"; position: absolute; right: 10px; bottom: -10px; font-size: 80px; opacity: 0.1;
+  }
   
-  .agency-list { display: flex; flex-direction: column; gap: 10px; }
-  .agency-btn { background: white; padding: 20px; border-radius: 10px; border-left: 6px solid var(--verde); cursor: pointer; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+  .officer-card { 
+    background: white; border-left: 5px solid #0056b3; 
+    border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .officer-name { font-weight: 800; color: var(--verde-comando); font-size: 14px; display: block; margin-bottom: 5px; }
+  
+  /* Botones de Acción Vibrantes */
+  .btn-call-mini { 
+    position: absolute; right: 10px; top: 15px; 
+    background: linear-gradient(to right, #28a745, #218838); color: white; 
+    padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: 800; 
+    display: flex; align-items: center; gap: 5px; box-shadow: 0 3px 6px rgba(0,0,0,0.2); 
+  }
+  .btn-map { 
+    background: linear-gradient(to right, #dc3545, #c82333); color: white; 
+    display: block; padding: 16px; text-align: center; text-decoration: none; 
+    border-radius: 12px; font-weight: 800; font-size: 15px; 
+    text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(220,53,69,0.4); 
+    margin-top: 20px; animation: pulse 2s infinite; /* Efecto latido */
+  }
 
-  .detail-card { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-  .detail-header { background: var(--verde); color: white; padding: 20px; }
-  .detail-body { padding: 20px; }
-
-  .officer-card { background: #f8f9fa; border-left: 5px solid #0056b3; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; }
-  .btn-call-mini { position: absolute; right: 10px; top: 15px; background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: bold; }
-  .btn-map { background: #dc3545; color: white; display: block; padding: 15px; text-align: center; text-decoration: none; border-radius: 10px; font-weight: bold; margin-top: 20px; }
-
-  #loader, #error-screen { text-align: center; padding: 50px 20px; color: #666; }
+  #loader, #error-screen { text-align: center; padding: 60px 20px; color: #ccc; font-weight: 600; text-shadow: 0 2px 4px black; }
+  .error-box { background: rgba(255,200,200,0.9); border: 2px solid #900; color: #500; padding: 20px; border-radius: 10px; font-size: 13px; text-align: left; }
 </style>
 </head>
 <body>
 
 <div id="view-login">
   <div class="login-card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/150px-Escudo_de_la_Polic%C3%ADa_Boliviana.png" style="width:80px; margin-bottom:15px;">
-    <h2 style="margin:0; color:var(--oro);">ACCESO OFICIAL</h2>
-    <p style="color:white; margin-bottom:20px; font-size:12px;">SIG-BSF LA PAZ</p>
-    <input type="password" id="pass-input" class="login-input" placeholder="CONTRASEÑA">
-    <button class="login-btn" onclick="checkPassword()">INGRESAR</button>
-    <div id="login-error" style="color:#ff9999; margin-top:10px; display:none;">Contraseña Incorrecta</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/150px-Escudo_de_la_Polic%C3%ADa_Boliviana.png" style="width:90px; margin-bottom:20px; filter: drop-shadow(0 0 10px gold);">
+    <h2 style="margin:0; color:var(--oro); font-size:20px; font-weight:900; letter-spacing:1px;">ACCESO TÁCTICO</h2>
+    <p style="color:#ddd; margin-bottom:25px; font-size:11px;">SISTEMA GEOGESTIÓN BSF</p>
+    <input type="password" id="pass-input" class="login-input" placeholder="INGRESE CÓDIGO">
+    <button class="login-btn" onclick="checkPassword()">AUTENTICAR</button>
+    <div id="login-error" style="color:#ff8888; font-weight:bold; margin-top:15px; display:none; text-shadow: 0 1px 2px black;">⛔ CÓDIGO ERRÓNEO</div>
   </div>
 </div>
 
@@ -71,42 +174,46 @@
   
   <div class="header">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/100px-Escudo_de_la_Polic%C3%ADa_Boliviana.png" class="header-logo">
-    
     <div class="header-text">
       <h1>BATALLÓN LA PAZ</h1>
-      <p>SEGURIDAD FÍSICA</p>
+      <p>SEGURIDAD FÍSICA ESTATAL</p>
     </div>
-    
     <img src="logo.png" class="header-logo" onerror="this.style.opacity='0'">
   </div>
 
   <div class="container">
-    <div id="loader">🔄 Sincronizando...</div>
-    <div id="error-screen" class="hidden">⚠️ Error de conexión. Revise internet.</div>
+    <div id="loader">🔄 ESTABLECIENDO ENLACE SATELITAL...</div>
+    <div id="error-screen" class="hidden">
+      <div class="error-box">
+        <strong>⚠️ ERROR DE SEGURIDAD</strong><br>
+        Conexión bloqueada por protocolo local.<br>
+        <strong>ACCIÓN:</strong> Ejecute este sistema desde el servidor seguro (GitHub).
+      </div>
+    </div>
 
     <div id="view-home" class="hidden">
-      <h2 class="section-title">Entidades</h2>
+      <h2 class="section-title">SELECCIÓN DE OBJETIVO</h2>
       <div class="bank-grid" id="bank-grid-content"></div>
     </div>
 
     <div id="view-agencies" class="hidden">
-      <button class="btn-back" onclick="goHome()">⬅ VOLVER</button>
-      <h2 class="section-title" id="agency-title">Agencias</h2>
+      <button class="btn-back" onclick="goHome()">⬅ REGRESAR AL MANDO</button>
+      <h2 class="section-title" id="agency-title">PUNTOS DE CONTROL</h2>
       <div class="agency-list" id="agency-list-content"></div>
     </div>
 
     <div id="view-detail" class="hidden">
-      <button class="btn-back" onclick="goBackToAgencies()">⬅ VOLVER</button>
+      <button class="btn-back" onclick="goBackToAgencies()">⬅ REGRESAR A LISTA</button>
       <div class="detail-card">
         <div class="detail-header">
-          <h2 id="d-bank" style="margin:0;">BANCO</h2>
-          <small id="d-agency">Agencia</small>
-          <div id="d-addr" style="font-size:11px; margin-top:5px;">Dirección...</div>
+          <h2 id="d-bank" style="margin:0; font-size:24px; font-weight:900;">BANCO</h2>
+          <small id="d-agency" style="color:#ddd; font-size:14px; display:block; margin-top:5px;">Agencia</small>
+          <div id="d-addr" style="font-size:11px; margin-top:10px; color:#aaa; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">Dirección...</div>
         </div>
         <div class="detail-body">
-          <h3 style="margin-top:0; font-size:12px; color:#00381e;">PERSONAL ASIGNADO:</h3>
-          <div id="officers-list"></div>
-          <a id="btn-map" href="#" class="btn-map" target="_blank">🗺️ UBICACIÓN GPS</a>
+          <h3 style="margin-top:0; font-size:12px; color:var(--verde-comando); border-bottom: 2px solid var(--oro); display:inline-block; padding-bottom:3px;">ESCUADRA ASIGNADA:</h3>
+          <div id="officers-list" style="margin-top:15px;"></div>
+          <a id="btn-map" href="#" class="btn-map" target="_blank">🗺️ NAVEGACIÓN TÁCTICA GPS</a>
         </div>
       </div>
     </div>
@@ -114,9 +221,11 @@
 </div>
 
 <script>
+  /* --- CONFIGURACIÓN --- */
   const PASSWORD_REAL = "BSF2025"; 
   const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSOk3SgSsOLT72VyjISH0aaKjbQojegDPsyOjR2b8VjvsiFpHqvLKcyn5XisYV46Rf4tUx--RsMlyMo/pub?output=csv'; 
   const COLUMNAS = ['ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'RIESGO', 'UBICACION_GPS'];
+
   let fullData = []; let currentBank = '';
 
   function checkPassword() {
@@ -141,7 +250,12 @@
   function renderBanks() {
     const banks = [...new Set(fullData.map(i => i.ENTIDAD).filter(e => e && e.trim()))];
     const grid = document.getElementById('bank-grid-content'); grid.innerHTML = '';
-    banks.forEach(b => { grid.innerHTML += `<button class="bank-btn" onclick="goToAgencies('${b}')"><div class="bank-icon">🏦</div><div style="font-weight:bold; font-size:12px;">${b}</div></button>`; });
+    banks.forEach(b => { 
+        grid.innerHTML += `<button class="bank-btn" onclick="goToAgencies('${b}')">
+        <div class="bank-icon">🏦</div>
+        <div class="bank-name">${b}</div>
+        </button>`; 
+    });
   }
 
   function goToAgencies(bank) {
@@ -154,7 +268,7 @@
     bankData.forEach(item => { if(!uniqueAgencies.has(item.AGENCIA)) uniqueAgencies.set(item.AGENCIA, item); });
     const list = document.getElementById('agency-list-content'); list.innerHTML = '';
     uniqueAgencies.forEach((item) => {
-      list.innerHTML += `<div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')"><div><strong>${item.AGENCIA}</strong><div style="font-size:11px; color:#666;">${item.DIRECCION.substring(0,30)}...</div></div><div>➤</div></div>`;
+      list.innerHTML += `<div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')"><div><strong>${item.AGENCIA}</strong><div style="font-size:11px; color:#555;">${item.DIRECCION.substring(0,30)}...</div></div><div style="font-size:20px;">➤</div></div>`;
     });
   }
 
@@ -167,9 +281,17 @@
     document.getElementById('d-agency').innerText = info.AGENCIA;
     document.getElementById('d-addr').innerText = info.DIRECCION;
     const list = document.getElementById('officers-list'); list.innerHTML = '';
+    
     officers.forEach(off => {
-        list.innerHTML += `<div class="officer-card"><strong style="color:#00381e;">👮 ${off.FUNCIONARIO}</strong><br><span style="font-size:12px;">⏰ ${off.HORARIO} | 📱 ${off.CELULAR}</span><a href="tel:${off.CELULAR}" class="btn-call-mini">📞</a></div>`;
+        // Icono de silueta generico
+        list.innerHTML += `
+        <div class="officer-card">
+            <div class="officer-name">👮‍♂️ ${off.FUNCIONARIO}</div>
+            <span class="officer-info">⏰ ${off.HORARIO} | 📱 ${off.CELULAR}</span>
+            <a href="tel:${off.CELULAR}" class="btn-call-mini">📞 LLAMAR</a>
+        </div>`;
     });
+    
     if(info.UBICACION_GPS) { document.getElementById('btn-map').href = 'https://maps.google.com/?q=' + info.UBICACION_GPS; document.getElementById('btn-map').style.display='block'; }
     else { document.getElementById('btn-map').style.display='none'; }
   }
