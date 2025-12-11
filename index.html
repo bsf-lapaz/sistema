@@ -182,4 +182,117 @@
   <div class="container">
     <div id="loader">🔄 ESTABLECIENDO ENLACE OPERATIVO...</div>
 
-    <div id="view-
+    <div id="view-home" class="hidden">
+      <h2 class="section-title">SELECCIÓN DE OBJETIVO</h2>
+      <div class="bank-grid" id="bank-grid-content"></div>
+    </div>
+
+    <div id="view-agencies" class="hidden">
+      <button class="btn-back" onclick="goHome()">⬅ REGRESAR AL COMANDO</button>
+      <h2 class="section-title" id="agency-title">PUNTOS DE CONTROL</h2>
+      <div class="agency-list" id="agency-list-content"></div>
+    </div>
+
+    <div id="view-detail" class="hidden">
+      <button class="btn-back" onclick="goBackToAgencies()">⬅ REGRESAR A LISTA</button>
+      <div class="detail-card">
+        <div class="detail-header">
+          <h2 id="d-bank" style="margin:0; font-size:22px; font-weight:900;">BANCO</h2>
+          <small id="d-agency" style="color:#ddd; font-size:13px; display:block; margin-top:5px;">Agencia</small>
+          <div id="d-addr" style="font-size:11px; margin-top:10px; color:#aaa; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">Dirección...</div>
+        </div>
+        <div class="detail-body">
+          <h3 style="margin-top:0; font-size:12px; color:var(--verde-comando); border-bottom: 2px solid var(--oro); display:inline-block; padding-bottom:3px;">ESCUADRA DE SERVICIO:</h3>
+          <div id="officers-list" style="margin-top:15px;"></div>
+          <a id="btn-map" href="#" class="btn-map" target="_blank">🗺️ NAVEGACIÓN TÁCTICA GPS</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* CONFIGURACIÓN */
+  const PASSWORD_REAL = "BSF2025"; 
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSOk3SgSsOLT72VyjISH0aaKjbQojegDPsyOjR2b8VjvsiFpHqvLKcyn5XisYV46Rf4tUx--RsMlyMo/pub?output=csv'; 
+  const COLUMNAS = ['ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'RIESGO', 'UBICACION_GPS'];
+
+  let fullData = []; let currentBank = '';
+
+  function checkPassword() {
+    if(document.getElementById('pass-input').value === PASSWORD_REAL) {
+        document.getElementById('view-login').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        loadData();
+    } else { document.getElementById('login-error').style.display = 'block'; }
+  }
+
+  function loadData() {
+    fetch(SHEET_URL).then(r=>{if(!r.ok)throw new Error();return r.text()}).then(t=>{fullData=csvAJSON(t);initSystem()})
+    .catch(e=>{alert("Error de conexión. Verifique Internet.")});
+  }
+
+  function initSystem() {
+    document.getElementById('loader').classList.add('hidden');
+    document.getElementById('view-home').classList.remove('hidden');
+    renderBanks();
+  }
+
+  function renderBanks() {
+    const banks = [...new Set(fullData.map(i => i.ENTIDAD).filter(e => e && e.trim()))];
+    const grid = document.getElementById('bank-grid-content'); grid.innerHTML = '';
+    banks.forEach(b => { 
+        grid.innerHTML += `<button class="bank-btn" onclick="goToAgencies('${b}')">
+        <div class="bank-icon">🏦</div><div class="bank-name">${b}</div></button>`; 
+    });
+  }
+
+  function goToAgencies(bank) {
+    currentBank = bank;
+    document.getElementById('view-home').classList.add('hidden');
+    document.getElementById('view-agencies').classList.remove('hidden');
+    document.getElementById('agency-title').innerText = bank;
+    const bankData = fullData.filter(i => i.ENTIDAD === bank);
+    const uniqueAgencies = new Map();
+    bankData.forEach(item => { if(!uniqueAgencies.has(item.AGENCIA)) uniqueAgencies.set(item.AGENCIA, item); });
+    const list = document.getElementById('agency-list-content'); list.innerHTML = '';
+    uniqueAgencies.forEach((item) => {
+      list.innerHTML += `<div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')"><div><strong>${item.AGENCIA}</strong><div style="font-size:11px; color:#555;">${item.DIRECCION.substring(0,30)}...</div></div><div style="font-size:20px;">➤</div></div>`;
+    });
+  }
+
+  function goToDetail(agencyName) {
+    const officers = fullData.filter(i => i.ENTIDAD === currentBank && i.AGENCIA === agencyName);
+    const info = officers[0];
+    document.getElementById('view-agencies').classList.add('hidden');
+    document.getElementById('view-detail').classList.remove('hidden');
+    document.getElementById('d-bank').innerText = info.ENTIDAD;
+    document.getElementById('d-agency').innerText = info.AGENCIA;
+    document.getElementById('d-addr').innerText = info.DIRECCION;
+    const list = document.getElementById('officers-list'); list.innerHTML = '';
+    
+    officers.forEach(off => {
+        list.innerHTML += `
+        <div class="officer-card">
+            <div class="officer-name">👮‍♂️ ${off.FUNCIONARIO}</div>
+            <span class="officer-info">⏰ ${off.HORARIO} | 📱 ${off.CELULAR}</span>
+            <a href="tel:${off.CELULAR}" class="btn-call-mini">📞 LLAMAR</a>
+        </div>`;
+    });
+    
+    if(info.UBICACION_GPS) { document.getElementById('btn-map').href = 'https://maps.google.com/?q=' + info.UBICACION_GPS; document.getElementById('btn-map').style.display='block'; }
+    else { document.getElementById('btn-map').style.display='none'; }
+  }
+
+  function goHome() { document.getElementById('view-agencies').classList.add('hidden'); document.getElementById('view-home').classList.remove('hidden'); }
+  function goBackToAgencies() { document.getElementById('view-detail').classList.add('hidden'); document.getElementById('view-agencies').classList.remove('hidden'); }
+  function csvAJSON(csv){
+    const lines = csv.split('\n'); const res = []; const headers = lines[0].split(',').map(h => h.trim().replace(/\r/g, ''));
+    for(let i=1; i<lines.length; i++){
+        const obj = {}; const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        if(row.length > 1) { COLUMNAS.forEach(col => { const idx = headers.indexOf(col); obj[col] = (idx > -1 && row[idx]) ? row[idx].replace(/"/g,'').replace(/\r/g,'').trim() : ''; }); res.push(obj); }
+    } return res;
+  }
+</script>
+</body>
+</html>
