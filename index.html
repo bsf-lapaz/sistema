@@ -3,145 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIG-BSF | Sistema Oficial</title>
+<title>SIG-BSF | Estructura Oficial</title>
 <style>
-  /* --- ESTILOS TÁCTICOS POLICIALES --- */
+  /* --- ESTILOS TÁCTICOS V9.1 --- */
   :root {
     --verde-comando: #00381e;
     --oro: #F3C300;
     --vidrio: rgba(255, 255, 255, 0.95);
-    --sombra-texto: 1px 1px 2px black;
+    --sombra-fuerte: 0 4px 15px rgba(0,0,0,0.5);
   }
   
   body { 
-    font-family: 'Segoe UI', Roboto, sans-serif; 
-    margin: 0; padding: 0; user-select: none;
-    /* Fondo Táctico Oscuro */
-    background: url('https://img.freepik.com/free-photo/police-car-lights-night-city-street_146671-19614.jpg?t=st=1710000000~exp=1710003600~hmac=abcdef') no-repeat center center fixed; 
-    background-size: cover;
-    background-color: #05110a; 
+    font-family: 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; user-select: none;
+    background: url('https://img.freepik.com/free-photo/police-car-lights-night-city-street_146671-19614.jpg') no-repeat center center fixed; 
+    background-size: cover; background-color: #05110a; 
   }
-  
-  /* Filtro oscuro para legibilidad */
-  body::before {
-    content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(0,30,10,0.92), rgba(0,10,0,0.95));
-    z-index: -1;
-  }
-
+  body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,35,15,0.9), rgba(0,10,0,0.95)); z-index: -1; }
   .hidden { display: none !important; }
 
-  /* --- BANDERA BOLIVIANA (EXTREMO A EXTREMO) --- */
-  .bolivia-flag {
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, #D52B1E 33.3%, #F9E300 33.3%, #F9E300 66.6%, #007934 66.6%);
-    position: fixed; top: 0; left: 0; z-index: 9999;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-  }
+  /* BANDERA */
+  .bolivia-flag { width: 100%; height: 6px; background: linear-gradient(90deg, #D52B1E 33.3%, #F9E300 33.3%, #F9E300 66.6%, #007934 66.6%); position: fixed; top: 0; left: 0; z-index: 9999; box-shadow: 0 2px 10px black; }
 
-  /* PANTALLA LOGIN */
-  #view-login { 
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-    z-index: 9990; display: flex; flex-direction: column; align-items: center; justify-content: center; 
-    backdrop-filter: blur(8px);
-  }
-  .login-card { 
-    background: rgba(0, 40, 20, 0.85); 
-    padding: 30px; border-radius: 20px; 
-    width: 85%; max-width: 320px; 
-    border: 1px solid rgba(0, 255, 85, 0.2); 
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-    text-align: center;
-  }
-  .login-input { 
-    width: 100%; padding: 15px; margin: 20px 0; border: none; border-radius: 8px; 
-    text-align: center; font-weight: bold; font-size: 16px; outline: none;
-  }
-  .login-btn { 
-    width: 100%; padding: 15px; background: var(--oro); color: var(--verde-comando); 
-    border: none; border-radius: 8px; font-weight: 900; font-size: 15px; cursor: pointer; 
-    text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  }
-  .lema-login {
-    color: #ddd; font-style: italic; font-size: 10px; margin-top: 20px; opacity: 0.8;
-  }
+  /* LOGIN */
+  #view-login { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9990; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+  .login-card { background: rgba(0, 40, 20, 0.85); padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; border: 1px solid rgba(0, 255, 85, 0.2); text-align: center; box-shadow: 0 0 50px black; }
+  .login-input { width: 100%; padding: 15px; margin: 20px 0; border: none; border-radius: 8px; text-align: center; font-weight: bold; font-size: 16px; outline: none; }
+  .login-btn { width: 100%; padding: 15px; background: var(--oro); color: var(--verde-comando); border: none; border-radius: 8px; font-weight: 900; font-size: 15px; cursor: pointer; text-transform: uppercase; }
+  .lema-login { color: #aaa; font-style: italic; font-size: 10px; margin-top: 20px; }
 
-  /* CABECERA OFICIAL */
-  .header { 
-    background: rgba(0, 56, 30, 0.95); 
-    backdrop-filter: blur(10px);
-    color: white; padding: 15px 10px 10px 10px; /* Padding top extra por la bandera */
-    border-bottom: 3px solid var(--oro); 
-    position: sticky; top: 0; z-index: 100; 
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    text-align: center;
-  }
-  
+  /* CABECERA */
+  .header { background: rgba(0, 56, 30, 0.95); backdrop-filter: blur(10px); color: white; padding: 20px 10px 15px 10px; border-bottom: 3px solid var(--oro); position: sticky; top: 0; z-index: 100; box-shadow: var(--sombra-fuerte); text-align: center; }
   .header-content { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
-  .header-logo { height: 55px; width: auto; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
-  
+  .header-logo { height: 85px; width: auto; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
   .header-text { flex-grow: 1; padding: 0 5px; }
-  .header h1 { margin: 0; font-size: 13px; font-weight: 900; letter-spacing: 0.5px; text-transform: uppercase; text-shadow: var(--sombra-texto); color: white; line-height: 1.2; }
-  
-  .lema-header {
-    font-size: 8px; color: var(--oro); margin-top: 4px; font-style: italic; font-weight: 600; letter-spacing: 0.5px;
-  }
+  .header h1 { margin: 0; font-size: 13px; font-weight: 900; text-transform: uppercase; line-height: 1.2; text-shadow: 1px 1px 2px black; }
+  .lema-header { font-size: 8px; color: var(--oro); margin-top: 6px; font-style: italic; font-weight: 600; }
 
   .container { padding: 20px 15px; max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
 
-  /* COMPONENTES */
-  .btn-back { 
-    background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2);
-    padding: 10px 20px; border-radius: 30px; margin-bottom: 20px; cursor: pointer; 
-    display: inline-flex; align-items: center; font-weight: bold; font-size: 12px; 
-    backdrop-filter: blur(5px);
-  }
-  
-  .section-title { 
-    color: var(--oro); border-left: 5px solid var(--oro); padding-left: 15px; 
-    margin-bottom: 20px; font-size: 18px; font-weight: 800; text-transform: uppercase; 
-    text-shadow: 2px 2px 4px black;
-  }
+  /* BOTONES Y MENUS */
+  .btn-back { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 30px; margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; font-weight: bold; font-size: 12px; }
+  .section-title { color: var(--oro); border-left: 5px solid var(--oro); padding-left: 15px; margin-bottom: 20px; font-size: 16px; font-weight: 800; text-transform: uppercase; text-shadow: 2px 2px 4px black; }
 
-  .bank-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-  .bank-btn { 
-    background: var(--vidrio); border: none; padding: 25px 10px; border-radius: 15px; 
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3); cursor: pointer; 
-    display: flex; flex-direction: column; align-items: center; 
-    border-bottom: 4px solid transparent; 
+  /* GRID DE ÁREAS */
+  .area-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+  .area-btn { 
+    background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(230,230,230,0.95) 100%);
+    border: none; padding: 20px; border-radius: 12px; 
+    display: flex; align-items: center; justify-content: flex-start; gap: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; border-left: 8px solid var(--verde-comando);
+    transition: transform 0.1s;
   }
-  .bank-btn:active { border-bottom: 4px solid var(--oro); transform: scale(0.98); }
-  .bank-icon { font-size: 32px; margin-bottom: 10px; }
-  .bank-name { font-weight: 900; color: var(--verde-comando); font-size: 12px; text-transform: uppercase; }
+  .area-btn:active { transform: scale(0.98); background: var(--oro); }
+  .area-icon { font-size: 28px; background: var(--verde-comando); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--oro); }
+  .area-name { font-weight: 800; color: var(--verde-comando); font-size: 13px; text-transform: uppercase; text-align: left; }
 
-  .agency-btn { 
-    background: var(--vidrio); padding: 18px; border-radius: 12px; 
-    border-left: 6px solid var(--verde-comando); cursor: pointer; 
-    display: flex; justify-content: space-between; align-items: center; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2); 
-  }
+  /* GRID DE ENTIDADES */
+  .entity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .entity-btn { background: var(--vidrio); border: none; padding: 20px 10px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; border-bottom: 4px solid transparent; }
+  .entity-btn:active { border-bottom: 4px solid var(--oro); transform: scale(0.96); }
+  .entity-icon { font-size: 30px; margin-bottom: 10px; }
+  .entity-name { font-weight: 800; color: var(--verde-comando); font-size: 11px; text-transform: uppercase; }
 
-  .detail-card { background: var(--vidrio); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+  /* LISTA AGENCIAS */
+  .agency-list { display: flex; flex-direction: column; gap: 10px; }
+  .agency-btn { background: var(--vidrio); padding: 18px; border-radius: 10px; border-left: 5px solid var(--verde-comando); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+
+  /* DETALLE */
+  .detail-card { background: var(--vidrio); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px black; }
   .detail-header { background: linear-gradient(135deg, var(--verde-comando), #001a00); color: white; padding: 25px; }
-  
-  .officer-card { 
-    background: white; border-left: 5px solid #0056b3; 
-    border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  .btn-call-mini { 
-    position: absolute; right: 10px; top: 15px; 
-    background: linear-gradient(to right, #28a745, #218838); color: white; 
-    padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: 800; 
-    display: flex; align-items: center; gap: 5px; 
-  }
-  .btn-map { 
-    background: linear-gradient(to right, #dc3545, #c82333); color: white; 
-    display: block; padding: 16px; text-align: center; text-decoration: none; 
-    border-radius: 12px; font-weight: 800; font-size: 14px; margin-top: 20px; 
-    text-transform: uppercase; box-shadow: 0 5px 15px rgba(220,53,69,0.4);
-  }
+  .officer-card { background: white; border-left: 5px solid #0056b3; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+  .btn-call-mini { position: absolute; right: 10px; top: 15px; background: linear-gradient(to right, #28a745, #218838); color: white; padding: 8px 15px; border-radius: 20px; text-decoration: none; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 5px; }
+  .btn-map { background: linear-gradient(to right, #dc3545, #c82333); color: white; display: block; padding: 16px; text-align: center; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; margin-top: 20px; text-transform: uppercase; box-shadow: 0 5px 15px rgba(220,53,69,0.4); }
 
   #loader { text-align: center; padding: 60px 20px; color: #ccc; font-weight: 600; text-shadow: 1px 1px 2px black; }
 </style>
@@ -152,14 +85,12 @@
 
 <div id="view-login">
   <div class="login-card">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/150px-Escudo_de_la_Polic%C3%ADa_Boliviana.png" style="width:90px; margin-bottom:20px; filter: drop-shadow(0 0 10px gold);">
-    <h2 style="margin:0; color:var(--oro); font-size:18px; font-weight:900; letter-spacing:1px;">ACCESO RESTRINGIDO</h2>
-    <p style="color:#ddd; margin-bottom:20px; font-size:11px;">SISTEMA SIG-BSF</p>
-    
+    <img src="policia.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/150px-Escudo_de_la_Polic%C3%ADa_Boliviana.png'" style="width:90px; margin-bottom:20px; filter: drop-shadow(0 0 10px gold);">
+    <h2 style="margin:0; color:var(--oro); font-size:18px; font-weight:900;">ACCESO OFICIAL</h2>
+    <p style="color:#ddd; margin-bottom:20px; font-size:11px;">SIG-BSF LA PAZ</p>
     <input type="password" id="pass-input" class="login-input" placeholder="CÓDIGO DE ACCESO">
     <button class="login-btn" onclick="checkPassword()">AUTENTICAR</button>
-    <div id="login-error" style="color:#ff8888; font-weight:bold; margin-top:15px; display:none; text-shadow:1px 1px 1px black;">⛔ CÓDIGO ERRÓNEO</div>
-    
+    <div id="login-error" style="color:#ff8888; font-weight:bold; margin-top:15px; display:none;">⛔ CÓDIGO ERRÓNEO</div>
     <div class="lema-login">"INTEGRIDAD, HONESTIDAD Y TRANSPARENCIA<br>AL SERVICIO DE LA SOCIEDAD"</div>
   </div>
 </div>
@@ -168,41 +99,45 @@
   
   <div class="header">
     <div class="header-content">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/100px-Escudo_de_la_Polic%C3%ADa_Boliviana.png" class="header-logo">
-        
+        <img src="policia.png" class="header-logo" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Escudo_de_la_Polic%C3%ADa_Boliviana.png/100px-Escudo_de_la_Polic%C3%ADa_Boliviana.png'">
         <div class="header-text">
           <h1>BATALLÓN DE SEGURIDAD FÍSICA LA PAZ</h1>
           <div class="lema-header">"INTEGRIDAD, HONESTIDAD Y TRANSPARENCIA<br>AL SERVICIO DE LA SOCIEDAD"</div>
         </div>
-        
         <img src="logo.png" class="header-logo" onerror="this.style.opacity='0'">
     </div>
   </div>
 
   <div class="container">
-    <div id="loader">🔄 ESTABLECIENDO ENLACE OPERATIVO...</div>
+    <div id="loader">🔄 SINCRONIZANDO ESTRUCTURA...</div>
 
-    <div id="view-home" class="hidden">
-      <h2 class="section-title">SELECCIÓN DE OBJETIVO</h2>
-      <div class="bank-grid" id="bank-grid-content"></div>
+    <div id="view-areas" class="hidden">
+      <h2 class="section-title">ÁREAS DE SERVICIO</h2>
+      <div class="area-grid" id="area-grid-content"></div>
+    </div>
+
+    <div id="view-entities" class="hidden">
+      <button class="btn-back" onclick="goBackToAreas()">⬅ VOLVER A ÁREAS</button>
+      <h2 class="section-title" id="entity-title">ENTIDADES</h2>
+      <div class="entity-grid" id="entity-grid-content"></div>
     </div>
 
     <div id="view-agencies" class="hidden">
-      <button class="btn-back" onclick="goHome()">⬅ REGRESAR AL COMANDO</button>
+      <button class="btn-back" onclick="goBackToEntities()">⬅ VOLVER A ENTIDADES</button>
       <h2 class="section-title" id="agency-title">PUNTOS DE CONTROL</h2>
       <div class="agency-list" id="agency-list-content"></div>
     </div>
 
     <div id="view-detail" class="hidden">
-      <button class="btn-back" onclick="goBackToAgencies()">⬅ REGRESAR A LISTA</button>
+      <button class="btn-back" onclick="goBackToAgencies()">⬅ VOLVER A LISTA</button>
       <div class="detail-card">
         <div class="detail-header">
-          <h2 id="d-bank" style="margin:0; font-size:22px; font-weight:900;">BANCO</h2>
+          <h2 id="d-bank" style="margin:0; font-size:22px; font-weight:900;">ENTIDAD</h2>
           <small id="d-agency" style="color:#ddd; font-size:13px; display:block; margin-top:5px;">Agencia</small>
           <div id="d-addr" style="font-size:11px; margin-top:10px; color:#aaa; border-top:1px solid rgba(255,255,255,0.2); padding-top:10px;">Dirección...</div>
         </div>
         <div class="detail-body">
-          <h3 style="margin-top:0; font-size:12px; color:var(--verde-comando); border-bottom: 2px solid var(--oro); display:inline-block; padding-bottom:3px;">ESCUADRA DE SERVICIO:</h3>
+          <h3 style="margin-top:0; font-size:12px; color:var(--verde-comando); border-bottom: 2px solid var(--oro); display:inline-block; padding-bottom:3px;">PERSONAL DE SERVICIO:</h3>
           <div id="officers-list" style="margin-top:15px;"></div>
           <a id="btn-map" href="#" class="btn-map" target="_blank">🗺️ NAVEGACIÓN TÁCTICA GPS</a>
         </div>
@@ -212,12 +147,14 @@
 </div>
 
 <script>
-  /* CONFIGURACIÓN */
   const PASSWORD_REAL = "BSF2025"; 
-  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSOk3SgSsOLT72VyjISH0aaKjbQojegDPsyOjR2b8VjvsiFpHqvLKcyn5XisYV46Rf4tUx--RsMlyMo/pub?output=csv'; 
-  const COLUMNAS = ['ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'RIESGO', 'UBICACION_GPS'];
+  const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuDPjowhTqnv_6g_WPFDbrq20hmxXCKnhqF9QsJNKLC_e6sCbupLT4HjqtGyGqwgswxk224xCcx2st/pub?output=csv'; 
+  
+  const COLUMNAS = ['AREA', 'ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'UBICACION_GPS'];
 
-  let fullData = []; let currentBank = '';
+  let fullData = []; 
+  let currentArea = '';
+  let currentEntity = '';
 
   function checkPassword() {
     if(document.getElementById('pass-input').value === PASSWORD_REAL) {
@@ -229,40 +166,76 @@
 
   function loadData() {
     fetch(SHEET_URL).then(r=>{if(!r.ok)throw new Error();return r.text()}).then(t=>{fullData=csvAJSON(t);initSystem()})
-    .catch(e=>{alert("Error de conexión. Verifique Internet.")});
+    .catch(e=>{alert("Error de conexión. Verifique la Hoja de Cálculo.")});
   }
 
   function initSystem() {
     document.getElementById('loader').classList.add('hidden');
-    document.getElementById('view-home').classList.remove('hidden');
-    renderBanks();
+    document.getElementById('view-areas').classList.remove('hidden');
+    renderAreas();
   }
 
-  function renderBanks() {
-    const banks = [...new Set(fullData.map(i => i.ENTIDAD).filter(e => e && e.trim()))];
-    const grid = document.getElementById('bank-grid-content'); grid.innerHTML = '';
-    banks.forEach(b => { 
-        grid.innerHTML += `<button class="bank-btn" onclick="goToAgencies('${b}')">
-        <div class="bank-icon">🏦</div><div class="bank-name">${b}</div></button>`; 
+  function renderAreas() {
+    const areas = [...new Set(fullData.map(i => i.AREA).filter(e => e && e.trim()))];
+    const grid = document.getElementById('area-grid-content'); grid.innerHTML = '';
+    
+    const getIcon = (name) => {
+        if(name.includes('FINANCIERA')) return '💰';
+        if(name.includes('VALORES')) return '🚛';
+        if(name.includes('INSTALACIONES')) return '🏢';
+        if(name.includes('VIP')) return '🛡️';
+        if(name.includes('INDUSTRIAL')) return '🏭';
+        if(name.includes('EMPRESARIAL')) return '💼';
+        return '📍';
+    };
+
+    areas.forEach(area => {
+        grid.innerHTML += `
+        <button class="area-btn" onclick="goToEntities('${area}')">
+            <div class="area-icon">${getIcon(area)}</div>
+            <div class="area-name">${area}</div>
+        </button>`; 
     });
   }
 
-  function goToAgencies(bank) {
-    currentBank = bank;
-    document.getElementById('view-home').classList.add('hidden');
+  function goToEntities(area) {
+    currentArea = area;
+    document.getElementById('view-areas').classList.add('hidden');
+    document.getElementById('view-entities').classList.remove('hidden');
+    document.getElementById('entity-title').innerText = area;
+
+    const entities = [...new Set(fullData.filter(i => i.AREA === area).map(i => i.ENTIDAD))];
+    const grid = document.getElementById('entity-grid-content'); grid.innerHTML = '';
+
+    if(entities.length === 0) grid.innerHTML = '<p style="color:white; text-align:center;">No hay entidades.</p>';
+
+    entities.forEach(ent => {
+        grid.innerHTML += `
+        <button class="entity-btn" onclick="goToAgencies('${ent}')">
+            <div class="entity-icon">🏦</div>
+            <div class="entity-name">${ent}</div>
+        </button>`;
+    });
+  }
+
+  function goToAgencies(entity) {
+    currentEntity = entity;
+    document.getElementById('view-entities').classList.add('hidden');
     document.getElementById('view-agencies').classList.remove('hidden');
-    document.getElementById('agency-title').innerText = bank;
-    const bankData = fullData.filter(i => i.ENTIDAD === bank);
+    document.getElementById('agency-title').innerText = entity;
+    
+    const agencyData = fullData.filter(i => i.AREA === currentArea && i.ENTIDAD === entity);
     const uniqueAgencies = new Map();
-    bankData.forEach(item => { if(!uniqueAgencies.has(item.AGENCIA)) uniqueAgencies.set(item.AGENCIA, item); });
+    agencyData.forEach(item => { if(!uniqueAgencies.has(item.AGENCIA)) uniqueAgencies.set(item.AGENCIA, item); });
+    
     const list = document.getElementById('agency-list-content'); list.innerHTML = '';
     uniqueAgencies.forEach((item) => {
-      list.innerHTML += `<div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')"><div><strong>${item.AGENCIA}</strong><div style="font-size:11px; color:#555;">${item.DIRECCION.substring(0,30)}...</div></div><div style="font-size:20px;">➤</div></div>`;
+      list.innerHTML += `<div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')"><div><strong style="color:#00381e;">${item.AGENCIA}</strong><div style="font-size:11px; color:#666;">${item.DIRECCION.substring(0,30)}...</div></div><div>➤</div></div>`;
     });
   }
 
   function goToDetail(agencyName) {
-    const officers = fullData.filter(i => i.ENTIDAD === currentBank && i.AGENCIA === agencyName);
+    const officers = fullData.filter(i => i.AREA === currentArea && i.ENTIDAD === currentEntity && i.AGENCIA === agencyName);
     const info = officers[0];
     document.getElementById('view-agencies').classList.add('hidden');
     document.getElementById('view-detail').classList.remove('hidden');
@@ -284,13 +257,24 @@
     else { document.getElementById('btn-map').style.display='none'; }
   }
 
-  function goHome() { document.getElementById('view-agencies').classList.add('hidden'); document.getElementById('view-home').classList.remove('hidden'); }
+  function goBackToAreas() { document.getElementById('view-entities').classList.add('hidden'); document.getElementById('view-areas').classList.remove('hidden'); }
+  function goBackToEntities() { document.getElementById('view-agencies').classList.add('hidden'); document.getElementById('view-entities').classList.remove('hidden'); }
   function goBackToAgencies() { document.getElementById('view-detail').classList.add('hidden'); document.getElementById('view-agencies').classList.remove('hidden'); }
+
   function csvAJSON(csv){
-    const lines = csv.split('\n'); const res = []; const headers = lines[0].split(',').map(h => h.trim().replace(/\r/g, ''));
+    const lines = csv.split('\n'); const res = []; 
+    const headers = lines[0].split(',').map(h => h.trim().replace(/\r/g, '').toUpperCase());
+    
     for(let i=1; i<lines.length; i++){
         const obj = {}; const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        if(row.length > 1) { COLUMNAS.forEach(col => { const idx = headers.indexOf(col); obj[col] = (idx > -1 && row[idx]) ? row[idx].replace(/"/g,'').replace(/\r/g,'').trim() : ''; }); res.push(obj); }
+        if(row.length > 1) { 
+            headers.forEach((h, index) => {
+                if(COLUMNAS.includes(h)) {
+                    obj[h] = (row[index]) ? row[index].replace(/"/g,'').replace(/\r/g,'').trim() : '';
+                }
+            });
+            if(obj.ENTIDAD) res.push(obj); 
+        }
     } return res;
   }
 </script>
