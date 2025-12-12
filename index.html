@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIG-BSF | Comando</title>
+<title>SIG-BSF | Sistema Táctico</title>
 <style>
-  /* --- ESTILOS TÁCTICOS V11.0 --- */
+  /* --- ESTILOS VISUALES V12.0 (ANTI-BLOQUEO) --- */
   :root {
     --verde-comando: #00381e;
     --oro: #F3C300;
     --vidrio: rgba(255, 255, 255, 0.95);
-    --sombra-fuerte: 0 4px 15px rgba(0,0,0,0.5);
   }
   
   body { 
@@ -18,7 +17,7 @@
     background: url('https://img.freepik.com/free-photo/police-car-lights-night-city-street_146671-19614.jpg') no-repeat center center fixed; 
     background-size: cover; background-color: #05110a; 
   }
-  body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,35,15,0.9), rgba(0,10,0,0.95)); z-index: -1; }
+  body::before { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,35,15,0.92), rgba(0,10,0,0.95)); z-index: -1; }
   .hidden { display: none !important; }
 
   /* BANDERA */
@@ -32,7 +31,7 @@
   .lema-login { color: #aaa; font-style: italic; font-size: 10px; margin-top: 20px; }
 
   /* CABECERA */
-  .header { background: rgba(0, 56, 30, 0.95); backdrop-filter: blur(10px); color: white; padding: 20px 10px 15px 10px; border-bottom: 3px solid var(--oro); position: sticky; top: 0; z-index: 100; box-shadow: var(--sombra-fuerte); text-align: center; }
+  .header { background: rgba(0, 56, 30, 0.95); backdrop-filter: blur(10px); color: white; padding: 20px 10px 15px 10px; border-bottom: 3px solid var(--oro); position: sticky; top: 0; z-index: 100; box-shadow: 0 5px 20px rgba(0,0,0,0.5); text-align: center; }
   .header-content { display: flex; align-items: center; justify-content: space-between; margin-top: 5px; }
   .header-logo { height: 85px; width: auto; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
   .header-text { flex-grow: 1; padding: 0 5px; }
@@ -46,7 +45,7 @@
   .search-input { flex-grow: 1; background: rgba(255,255,255,0.9); border: none; padding: 12px; border-radius: 8px; font-weight: bold; outline: none; text-transform: uppercase; }
   .search-btn { background: var(--oro); color: var(--verde-comando); border: none; padding: 0 20px; border-radius: 8px; font-weight: 900; cursor: pointer; }
 
-  /* BOTONES Y MENUS */
+  /* BOTONES */
   .btn-back { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 30px; margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; font-weight: bold; font-size: 12px; }
   .section-title { color: var(--oro); border-left: 5px solid var(--oro); padding-left: 15px; margin-bottom: 20px; font-size: 16px; font-weight: 800; text-transform: uppercase; text-shadow: 2px 2px 4px black; }
 
@@ -78,6 +77,7 @@
   .btn-map { background: linear-gradient(to right, #dc3545, #c82333); color: white; display: block; padding: 16px; text-align: center; text-decoration: none; border-radius: 12px; font-weight: 800; font-size: 14px; margin-top: 20px; text-transform: uppercase; box-shadow: 0 5px 15px rgba(220,53,69,0.4); }
 
   #loader { text-align: center; padding: 60px 20px; color: #ccc; font-weight: 600; text-shadow: 1px 1px 2px black; }
+  .error-msg { color: #ff9999; font-weight: bold; background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px; margin-top: 20px; display: none; }
 </style>
 </head>
 <body>
@@ -110,7 +110,10 @@
   </div>
 
   <div class="container">
-    <div id="loader">🔄 ESTABLECIENDO ENLACE OPERATIVO...</div>
+    <div id="loader">
+        <div>🔄 SINCRONIZANDO ESTRUCTURA...</div>
+        <div id="error-message" class="error-msg"></div>
+    </div>
 
     <div id="view-areas" class="hidden">
       <div class="search-box">
@@ -161,8 +164,8 @@
   const PASSWORD_REAL = "BSF2025"; 
   const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuDPjowhTqnv_6g_WPFDbrq20hmxXCKnhqF9QsJNKLC_e6sCbupLT4HjqtGyGqwgswxk224xCcx2st/pub?output=csv'; 
   
-  // COLUMNAS NECESARIAS (Ignora las extras como ESTADO)
-  const COLUMNAS_REQUERIDAS = ['AREA', 'ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'UBICACION_GPS'];
+  // NOMBRES EXACTOS DE COLUMNAS (Ignora mayus/minus)
+  const EXPECTED_COLS = ['AREA', 'ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'UBICACION_GPS'];
 
   let fullData = []; let currentArea = ''; let currentEntity = ''; let isSearchMode = false;
 
@@ -175,20 +178,36 @@
   }
 
   function loadData() {
+    // TEMPORIZADOR DE SEGURIDAD: Si falla carga en 5 segs, avisa pero no se cuelga
+    const safetyTimer = setTimeout(() => {
+        if(fullData.length === 0) {
+            document.getElementById('loader').innerHTML = "<div class='error-msg' style='display:block'>⚠️ TARDANDO DEMASIADO.<br>Verifique su conexión o el enlace de la Hoja de Cálculo.</div>";
+        }
+    }, 5000);
+
     fetch(SHEET_URL)
-      .then(r=>{if(!r.ok)throw new Error();return r.text()})
-      .then(t=>{
+      .then(r => r.text())
+      .then(t => {
+          clearTimeout(safetyTimer);
           fullData = csvAJSON(t);
+          if(fullData.length === 0) {
+             alert("La hoja parece vacía o las columnas no coinciden.");
+          }
           document.getElementById('loader').classList.add('hidden');
           document.getElementById('view-areas').classList.remove('hidden');
           renderAreas();
       })
-      .catch(e=>{alert("Error de conexión. Revise la Hoja de Cálculo.")});
+      .catch(e => {
+          clearTimeout(safetyTimer);
+          document.getElementById('error-message').innerText = "ERROR DE CONEXIÓN: " + e.message;
+          document.getElementById('error-message').style.display = 'block';
+      });
   }
 
+  // --- BUSCADOR ---
   function performSearch() {
     const query = document.getElementById('search-input').value.toUpperCase().trim();
-    if(query.length < 2) { alert("Ingrese al menos 2 letras"); return; }
+    if(query.length < 2) return;
     const matches = fullData.filter(row => row.FUNCIONARIO && row.FUNCIONARIO.toUpperCase().includes(query));
     document.getElementById('view-areas').classList.add('hidden');
     document.getElementById('view-search-results').classList.remove('hidden');
@@ -219,10 +238,12 @@
     document.getElementById('search-input').value = '';
   }
 
+  // --- RENDER ---
   function renderAreas() {
     const areas = [...new Set(fullData.map(i => i.AREA).filter(e => e && e.trim()))];
     const grid = document.getElementById('area-grid-content'); grid.innerHTML = '';
     const getIcon = (name) => {
+        if(!name) return '📍';
         if(name.includes('FINANCIERA')) return '💰';
         if(name.includes('VALORES')) return '🚛';
         if(name.includes('INSTALACIONES')) return '🏢';
@@ -276,6 +297,7 @@
     document.getElementById('d-agency').innerText = info.AGENCIA;
     document.getElementById('d-addr').innerText = info.DIRECCION;
     const list = document.getElementById('officers-list'); list.innerHTML = '';
+    
     officers.forEach(off => {
         list.innerHTML += `
         <div class="officer-card">
@@ -284,6 +306,7 @@
             <a href="tel:${off.CELULAR}" class="btn-call-mini">📞 LLAMAR</a>
         </div>`;
     });
+    
     if(info.UBICACION_GPS) { document.getElementById('btn-map').href = 'https://maps.google.com/?q=' + info.UBICACION_GPS; document.getElementById('btn-map').style.display='block'; }
     else { document.getElementById('btn-map').style.display='none'; }
   }
@@ -292,29 +315,34 @@
   function goBackToEntities() { document.getElementById('view-agencies').classList.add('hidden'); document.getElementById('view-entities').classList.remove('hidden'); }
   function goBackToAgencies() { isSearchMode=false; document.getElementById('view-detail').classList.add('hidden'); document.getElementById('view-agencies').classList.remove('hidden'); }
 
-  // PARSEADOR MEJORADO PARA IGNORAR COLUMNAS EXTRA
+  // PARSEADOR BLINDADO V12
   function csvAJSON(csv){
-    const lines = csv.split('\n'); const res = []; 
-    // Detectar encabezados y limpiarlos
-    const headers = lines[0].split(',').map(h => h.trim().replace(/\r/g, '').toUpperCase());
+    const lines = csv.split('\n'); 
+    if(lines.length < 2) return [];
+    const res = [];
+    
+    // Limpieza de encabezados (eliminar caracteres invisibles BOM)
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^[\uFEFF\s]+|[\s]+$/g, '').toUpperCase());
     
     for(let i=1; i<lines.length; i++){
-        const obj = {}; 
-        // Regex complejo para respetar comas dentro de comillas
+        // Usamos un regex seguro para separar por comas
         const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+        const obj = {};
         
-        if(row.length > 1) { 
-            headers.forEach((h, index) => {
-                // SOLO procesamos si la columna es una de las REQUERIDAS
-                if(COLUMNAS_REQUERIDAS.includes(h)) {
-                    let val = row[index] ? row[index].replace(/"/g,'').replace(/\r/g,'').trim() : '';
-                    obj[h] = val;
-                }
-            });
-            // Validación final: solo agregar si tiene Entidad
-            if(obj.ENTIDAD) res.push(obj); 
+        // Mapeo defensivo: solo toma columnas que coincidan
+        headers.forEach((h, index) => {
+            if(EXPECTED_COLS.includes(h) && row[index] !== undefined) {
+                // Limpiar comillas extras de Excel
+                obj[h] = row[index].replace(/^"|"$/g, '').trim();
+            }
+        });
+
+        // Solo agregar si tiene datos mínimos
+        if(obj.ENTIDAD && obj.AREA) {
+            res.push(obj);
         }
-    } return res;
+    }
+    return res;
   }
 </script>
 </body>
