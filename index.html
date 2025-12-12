@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SIG-BSF | Estructura Oficial</title>
+<title>SIG-BSF | Comando</title>
 <style>
-  /* --- ESTILOS TÁCTICOS V9.1 --- */
+  /* --- ESTILOS TÁCTICOS V10.0 (Buscador) --- */
   :root {
     --verde-comando: #00381e;
     --oro: #F3C300;
@@ -41,35 +41,53 @@
 
   .container { padding: 20px 15px; max-width: 600px; margin: 0 auto; padding-bottom: 80px; }
 
+  /* --- BUSCADOR DE PERSONAL (NUEVO) --- */
+  .search-box { 
+    background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; margin-bottom: 25px; 
+    border: 1px solid rgba(255,255,255,0.2); display: flex; gap: 10px;
+  }
+  .search-input { 
+    flex-grow: 1; background: rgba(255,255,255,0.9); border: none; padding: 12px; border-radius: 8px; 
+    font-weight: bold; outline: none; text-transform: uppercase;
+  }
+  .search-btn { 
+    background: var(--oro); color: var(--verde-comando); border: none; padding: 0 20px; border-radius: 8px; 
+    font-weight: 900; cursor: pointer;
+  }
+
   /* BOTONES Y MENUS */
   .btn-back { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 30px; margin-bottom: 20px; cursor: pointer; display: inline-flex; align-items: center; font-weight: bold; font-size: 12px; }
   .section-title { color: var(--oro); border-left: 5px solid var(--oro); padding-left: 15px; margin-bottom: 20px; font-size: 16px; font-weight: 800; text-transform: uppercase; text-shadow: 2px 2px 4px black; }
 
-  /* GRID DE ÁREAS */
+  /* AREAS Y ENTIDADES */
   .area-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
   .area-btn { 
     background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(230,230,230,0.95) 100%);
-    border: none; padding: 20px; border-radius: 12px; 
-    display: flex; align-items: center; justify-content: flex-start; gap: 15px;
+    border: none; padding: 20px; border-radius: 12px; display: flex; align-items: center; justify-content: flex-start; gap: 15px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3); cursor: pointer; border-left: 8px solid var(--verde-comando);
-    transition: transform 0.1s;
   }
-  .area-btn:active { transform: scale(0.98); background: var(--oro); }
   .area-icon { font-size: 28px; background: var(--verde-comando); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 2px solid var(--oro); }
   .area-name { font-weight: 800; color: var(--verde-comando); font-size: 13px; text-transform: uppercase; text-align: left; }
 
-  /* GRID DE ENTIDADES */
   .entity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   .entity-btn { background: var(--vidrio); border: none; padding: 20px 10px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; display: flex; flex-direction: column; align-items: center; border-bottom: 4px solid transparent; }
-  .entity-btn:active { border-bottom: 4px solid var(--oro); transform: scale(0.96); }
   .entity-icon { font-size: 30px; margin-bottom: 10px; }
   .entity-name { font-weight: 800; color: var(--verde-comando); font-size: 11px; text-transform: uppercase; }
 
-  /* LISTA AGENCIAS */
+  /* RESULTADOS DE BÚSQUEDA */
+  .result-card { 
+    background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid var(--oro); cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s;
+  }
+  .result-card:active { transform: scale(0.98); background: #fffde7; }
+  .res-name { font-weight: 800; color: var(--verde-comando); font-size: 13px; display: block; }
+  .res-loc { font-size: 11px; color: #555; margin-top: 4px; display: block; }
+  .res-tag { background: #eee; font-size: 9px; padding: 2px 6px; border-radius: 4px; color: #333; margin-top: 5px; display: inline-block; font-weight: bold; }
+
+  /* AGENCIAS Y DETALLE */
   .agency-list { display: flex; flex-direction: column; gap: 10px; }
   .agency-btn { background: var(--vidrio); padding: 18px; border-radius: 10px; border-left: 5px solid var(--verde-comando); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
 
-  /* DETALLE */
   .detail-card { background: var(--vidrio); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px black; }
   .detail-header { background: linear-gradient(135deg, var(--verde-comando), #001a00); color: white; padding: 25px; }
   .officer-card { background: white; border-left: 5px solid #0056b3; border-radius: 8px; padding: 15px; margin-bottom: 15px; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -109,11 +127,23 @@
   </div>
 
   <div class="container">
-    <div id="loader">🔄 SINCRONIZANDO ESTRUCTURA...</div>
+    <div id="loader">🔄 ESTABLECIENDO ENLACE OPERATIVO...</div>
 
     <div id="view-areas" class="hidden">
+      
+      <div class="search-box">
+        <input type="text" id="search-input" class="search-input" placeholder="BUSCAR APELLIDO O GRADO...">
+        <button class="search-btn" onclick="performSearch()">🔎</button>
+      </div>
+
       <h2 class="section-title">ÁREAS DE SERVICIO</h2>
       <div class="area-grid" id="area-grid-content"></div>
+    </div>
+
+    <div id="view-search-results" class="hidden">
+      <button class="btn-back" onclick="goBackToAreasFromSearch()">⬅ VOLVER AL MENÚ</button>
+      <h2 class="section-title">RESULTADOS DE BÚSQUEDA</h2>
+      <div id="search-results-content"></div>
     </div>
 
     <div id="view-entities" class="hidden">
@@ -129,7 +159,7 @@
     </div>
 
     <div id="view-detail" class="hidden">
-      <button class="btn-back" onclick="goBackToAgencies()">⬅ VOLVER A LISTA</button>
+      <button class="btn-back" id="btn-back-detail" onclick="goBackToAgencies()">⬅ VOLVER A LISTA</button>
       <div class="detail-card">
         <div class="detail-header">
           <h2 id="d-bank" style="margin:0; font-size:22px; font-weight:900;">ENTIDAD</h2>
@@ -149,12 +179,12 @@
 <script>
   const PASSWORD_REAL = "BSF2025"; 
   const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQuDPjowhTqnv_6g_WPFDbrq20hmxXCKnhqF9QsJNKLC_e6sCbupLT4HjqtGyGqwgswxk224xCcx2st/pub?output=csv'; 
-  
   const COLUMNAS = ['AREA', 'ENTIDAD', 'AGENCIA', 'DIRECCION', 'FUNCIONARIO', 'CELULAR', 'HORARIO', 'UBICACION_GPS'];
 
   let fullData = []; 
   let currentArea = '';
   let currentEntity = '';
+  let isSearchMode = false; // Control de navegación
 
   function checkPassword() {
     if(document.getElementById('pass-input').value === PASSWORD_REAL) {
@@ -175,6 +205,58 @@
     renderAreas();
   }
 
+  // --- BUSCADOR ---
+  function performSearch() {
+    const query = document.getElementById('search-input').value.toUpperCase().trim();
+    if(query.length < 2) { alert("Ingrese al menos 2 letras"); return; }
+
+    const matches = fullData.filter(row => row.FUNCIONARIO && row.FUNCIONARIO.toUpperCase().includes(query));
+    
+    document.getElementById('view-areas').classList.add('hidden');
+    document.getElementById('view-search-results').classList.remove('hidden');
+    
+    const container = document.getElementById('search-results-content');
+    container.innerHTML = '';
+
+    if(matches.length === 0) {
+        container.innerHTML = '<div style="color:white; text-align:center;">NO SE ENCONTRÓ PERSONAL CON ESE NOMBRE.</div>';
+        return;
+    }
+
+    matches.forEach(item => {
+        container.innerHTML += `
+        <div class="result-card" onclick="goToDetailFromSearch('${item.AREA}', '${item.ENTIDAD}', '${item.AGENCIA}')">
+            <span class="res-name">👮‍♂️ ${item.FUNCIONARIO}</span>
+            <span class="res-loc">🏛️ ${item.ENTIDAD} - ${item.AGENCIA}</span>
+            <span class="res-tag">${item.AREA}</span>
+        </div>`;
+    });
+  }
+
+  function goToDetailFromSearch(area, entity, agency) {
+    currentArea = area;
+    currentEntity = entity;
+    isSearchMode = true; // Activamos modo búsqueda para que el botón volver funcione bien
+    
+    // Configurar botón volver para que regrese a resultados
+    const btn = document.getElementById('btn-back-detail');
+    btn.onclick = function() { 
+        document.getElementById('view-detail').classList.add('hidden');
+        document.getElementById('view-search-results').classList.remove('hidden');
+    };
+    btn.innerText = "⬅ VOLVER A RESULTADOS";
+
+    goToDetail(agency);
+    document.getElementById('view-search-results').classList.add('hidden');
+  }
+
+  function goBackToAreasFromSearch() {
+    document.getElementById('view-search-results').classList.add('hidden');
+    document.getElementById('view-areas').classList.remove('hidden');
+    document.getElementById('search-input').value = ''; // Limpiar
+  }
+
+  // --- RENDERIZADO NORMAL ---
   function renderAreas() {
     const areas = [...new Set(fullData.map(i => i.AREA).filter(e => e && e.trim()))];
     const grid = document.getElementById('area-grid-content'); grid.innerHTML = '';
@@ -190,11 +272,7 @@
     };
 
     areas.forEach(area => {
-        grid.innerHTML += `
-        <button class="area-btn" onclick="goToEntities('${area}')">
-            <div class="area-icon">${getIcon(area)}</div>
-            <div class="area-name">${area}</div>
-        </button>`; 
+        grid.innerHTML += `<button class="area-btn" onclick="goToEntities('${area}')"><div class="area-icon">${getIcon(area)}</div><div class="area-name">${area}</div></button>`; 
     });
   }
 
@@ -203,18 +281,11 @@
     document.getElementById('view-areas').classList.add('hidden');
     document.getElementById('view-entities').classList.remove('hidden');
     document.getElementById('entity-title').innerText = area;
-
     const entities = [...new Set(fullData.filter(i => i.AREA === area).map(i => i.ENTIDAD))];
     const grid = document.getElementById('entity-grid-content'); grid.innerHTML = '';
-
     if(entities.length === 0) grid.innerHTML = '<p style="color:white; text-align:center;">No hay entidades.</p>';
-
     entities.forEach(ent => {
-        grid.innerHTML += `
-        <button class="entity-btn" onclick="goToAgencies('${ent}')">
-            <div class="entity-icon">🏦</div>
-            <div class="entity-name">${ent}</div>
-        </button>`;
+        grid.innerHTML += `<button class="entity-btn" onclick="goToAgencies('${ent}')"><div class="entity-icon">🏦</div><div class="entity-name">${ent}</div></button>`;
     });
   }
 
@@ -223,11 +294,9 @@
     document.getElementById('view-entities').classList.add('hidden');
     document.getElementById('view-agencies').classList.remove('hidden');
     document.getElementById('agency-title').innerText = entity;
-    
     const agencyData = fullData.filter(i => i.AREA === currentArea && i.ENTIDAD === entity);
     const uniqueAgencies = new Map();
     agencyData.forEach(item => { if(!uniqueAgencies.has(item.AGENCIA)) uniqueAgencies.set(item.AGENCIA, item); });
-    
     const list = document.getElementById('agency-list-content'); list.innerHTML = '';
     uniqueAgencies.forEach((item) => {
       list.innerHTML += `<div class="agency-btn" onclick="goToDetail('${item.AGENCIA}')"><div><strong style="color:#00381e;">${item.AGENCIA}</strong><div style="font-size:11px; color:#666;">${item.DIRECCION.substring(0,30)}...</div></div><div>➤</div></div>`;
@@ -235,6 +304,13 @@
   }
 
   function goToDetail(agencyName) {
+    // Si no venimos de búsqueda, configurar botón volver normal
+    if(!isSearchMode) {
+        const btn = document.getElementById('btn-back-detail');
+        btn.onclick = goBackToAgencies;
+        btn.innerText = "⬅ VOLVER A LISTA";
+    }
+
     const officers = fullData.filter(i => i.AREA === currentArea && i.ENTIDAD === currentEntity && i.AGENCIA === agencyName);
     const info = officers[0];
     document.getElementById('view-agencies').classList.add('hidden');
@@ -259,19 +335,20 @@
 
   function goBackToAreas() { document.getElementById('view-entities').classList.add('hidden'); document.getElementById('view-areas').classList.remove('hidden'); }
   function goBackToEntities() { document.getElementById('view-agencies').classList.add('hidden'); document.getElementById('view-entities').classList.remove('hidden'); }
-  function goBackToAgencies() { document.getElementById('view-detail').classList.add('hidden'); document.getElementById('view-agencies').classList.remove('hidden'); }
+  function goBackToAgencies() { 
+      isSearchMode = false; // Resetear modo búsqueda
+      document.getElementById('view-detail').classList.add('hidden'); 
+      document.getElementById('view-agencies').classList.remove('hidden'); 
+  }
 
   function csvAJSON(csv){
     const lines = csv.split('\n'); const res = []; 
     const headers = lines[0].split(',').map(h => h.trim().replace(/\r/g, '').toUpperCase());
-    
     for(let i=1; i<lines.length; i++){
         const obj = {}; const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
         if(row.length > 1) { 
             headers.forEach((h, index) => {
-                if(COLUMNAS.includes(h)) {
-                    obj[h] = (row[index]) ? row[index].replace(/"/g,'').replace(/\r/g,'').trim() : '';
-                }
+                if(COLUMNAS.includes(h)) { obj[h] = (row[index]) ? row[index].replace(/"/g,'').replace(/\r/g,'').trim() : ''; }
             });
             if(obj.ENTIDAD) res.push(obj); 
         }
